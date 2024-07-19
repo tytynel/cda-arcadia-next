@@ -1,14 +1,12 @@
-import Image from "next/image";
 import Link from 'next/link';
-import styles from "./page.module.css";
-
-export default function Home() {
-  return (
+// `app/dashboard/page.js` is the UI for the `/dashboard` URL
+export default function Page() {
+    return
     <>
       <header>
-        <h1>Arcadia</h1>
-      </header>
-      <nav>
+          <h1>Animaux</h1>
+        </header>
+        <nav>
         <ul>
           <li><Link href="/">Accueil</Link></li>
           <li><Link href="/services">Services</Link></li>
@@ -17,10 +15,11 @@ export default function Home() {
           <li><Link href="/connection">Se connecter</Link></li>
         </ul>
       </nav>
-      <main className={styles.main}>
+        <main className="">
 
-      </main>
+        </main>
+        <footer>
+
+        </footer>
     </>
-
-  );
-}
+  }

@@ -53,9 +53,9 @@ async function getAllStats() {
     return Response.json({result});
 }
 
-async function getStatByMysqlId(mysqlId) {
+async function updStatByMysqlId(mysqlId) {
 
-    async function getByMysqlId(){
+    async function getByMysqlId(mysqlId){
         mongoose.connect(process.env.MONGO_DB_URI)
         .then(async () => {
             console.log('Connected to MongoDB');
@@ -66,7 +66,7 @@ async function getStatByMysqlId(mysqlId) {
             return err;
         });
 
-        const statObj = await statisticSchema.find({mysqlAnimalId:'1'}).then((a) => {
+        const statObj = await statisticSchema.find({mysqlAnimalId:mysqlId}).then((a) => {
             console.log("aaaa" + a);
             return a;
         });
@@ -75,10 +75,34 @@ async function getStatByMysqlId(mysqlId) {
         return statObj;
     };
     
-    const result = await getByMysqlId();
+    const result = await getByMysqlId(mysqlId);
+    let objStat = {};
 
-    console.log("after" + result);
-    return Response.json({result});
+    result.map((field, index) => (
+        objStat._id = field._id,
+        objStat.mysqlAnimalId = field.mysqlAnimalId,
+        objStat.name = field.name,
+        objStat.stat = Number(field.stat) + 1 ,
+        console.log("in" + field.name)
+    ));
+    console.log("after" + objStat.stat);
+    const stat = await statisticSchema.findOneAndReplace(
+        { "mysqlAnimalId": objStat.mysqlAnimalId },
+        { "mysqlAnimalId": objStat.mysqlAnimalId,"name": objStat.name,"stat": objStat.stat},
+        {
+            upsert: true,
+            returnNewDocument: true
+         }
+     );
+   /* const stat = await statisticSchema.findByIdAndUpdate(
+        {_id: _id}, 
+        {stat: nb},
+        {new: true}
+     );*/
+    //await result.save();
+
+    //console.log("update" + stat);
+    return Response.json({stat});
 }
 
 
@@ -92,8 +116,8 @@ GET: getAllStats(),
 POST: updateStats()
 });*/
 export async function GET(Request) {
-   return await getAllStats();
-   //return await getStatByMysqlId("1");
+   //return await getAllStats();
+   return await updStatByMysqlId("1");
 
  /*   let mdb = mongoose.createConnection(process.env.MONGO_DB_URI);
             db.on('error', console.error.bind(console, 'connection error:'));

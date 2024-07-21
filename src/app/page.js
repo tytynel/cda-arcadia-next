@@ -14,7 +14,7 @@ export default function Home() {
           <li><Link href="/services">Services</Link></li>
           <li><Link href="/habitat">Habitats</Link></li>
           <li><Link href="/animals">Animaux</Link></li>
-          <li><Link href="/connection">Se connecter</Link></li>
+          <li><Link href="./connection">Se connecter</Link></li>
         </ul>
       </nav>
       <main className={styles.main}>

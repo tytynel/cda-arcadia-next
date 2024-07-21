@@ -1,6 +1,28 @@
 
+'use client'
 import Link from 'next/link';// `app/dashboard/page.js` is the UI for the `/dashboard` URL
+import { useState } from 'react';
 export default function Page() {
+  const [file,setFile] = useState({});
+  const onSubmit = async (e)=> {
+    e.preventDefault();
+    if (!file) {
+      return {};
+    }else{
+      try {
+        const data = new FormData();
+        data.set("file",file);
+        const res = await fetch("/api/upload-img",{
+          method: "POST",
+          body: data
+        })
+        if(!res.ok) throw new Error(await res.text());
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    } 
+  
   return (  <>
     <header>
         <h1>Gestion des services</h1>
@@ -18,7 +40,12 @@ export default function Page() {
       </ul>
     </nav>
       <main className="">
-
+        <form onSubmit={onSubmit}>
+          <input type="file" name="file" onChange={(e) =>{
+            setFile(e.target.files?.[0]);
+            }}/>
+          <input type="submit" value="Upload"/>
+        </form>
       </main>
       <footer>
 
